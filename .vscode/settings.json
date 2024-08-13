@@ -1,5 +1,4 @@
 {
-    "python.analysis.typeCheckingMode": "strict",
     "editor.formatOnSave": true,
     "[html][javascript][css][scss][typescript][typescriptreact][json]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
