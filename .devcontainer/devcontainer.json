@@ -1,0 +1,28 @@
+{
+    "name": "Sheetrocket DevContainer",
+    "dockerFile": "Dockerfile",
+    "mounts": [
+      "source=${localWorkspaceFolder},target=/sheetrocket,type=bind",
+      "source=/Users/${localEnv:USER}/.ssh,target=/home/vscode/.ssh,type=bind,readonly"
+    ],
+    "workspaceFolder": "/sheetrocket",
+    "features": {
+      "ghcr.io/devcontainers/features/docker-in-docker:2": {
+        "version": "latest",
+        "enableNonRootDocker": "true"
+      },
+      "ghcr.io/devcontainers/features/node:1": {
+        "version": "18"
+      }
+    },
+    "appPort": [3001, 5000],
+    "postCreateCommand": "cd backend && npm install && cd ../frontend && npm install",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "esbenp.prettier-vscode"
+        ]
+      }
+    }
+  }
+  
