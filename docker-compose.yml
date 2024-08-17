@@ -1,6 +1,19 @@
+
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:13.5
+    restart: always
+    environment:
+      - POSTGRES_USER=my_db_name
+      - POSTGRES_PASSWORD=my_db_password
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+
   frontend:
     build:
       context: .
@@ -16,8 +29,7 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    volumes:
-      - ./backend:/app/backend
+    
     ports:
       - "5000:5000"  # Map container port 5000 to host port 5000
     environment:
@@ -30,17 +42,9 @@ services:
     depends_on:
       - postgres
 
-  postgres:
-    image: postgres:15
-    container_name: sheetrocket-postgres
-    ports:
-      - "5432:5432"  # Map container port 5432 to host port 5432
-    environment:
-      - POSTGRES_USER=my_db_user
-      - POSTGRES_PASSWORD=my_db_password
-      - POSTGRES_DB=my_db_name
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  postgres:
+
+
+
