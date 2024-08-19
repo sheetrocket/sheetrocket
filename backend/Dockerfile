@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 5000
 
 # Command to run the NestJS application
-CMD ["node", "dist/main"]
+CMD [ "npm", "run", "start:prod" ]

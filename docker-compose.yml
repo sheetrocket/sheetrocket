@@ -1,6 +1,19 @@
+
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:13.5
+    restart: always
+    environment:
+      - POSTGRES_USER=my_db_name
+      - POSTGRES_PASSWORD=my_db_password
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+
   frontend:
     build:
       context: .
@@ -16,9 +29,22 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    volumes:
-      - ./backend:/app/backend
+    
     ports:
       - "5000:5000"  # Map container port 5000 to host port 5000
     environment:
       - NODE_ENV=development
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=my_db_user
+      - DATABASE_PASSWORD=my_db_password
+      - DATABASE_NAME=my_db_name
+    depends_on:
+      - postgres
+
+
+volumes:
+  postgres:
+
+
+
