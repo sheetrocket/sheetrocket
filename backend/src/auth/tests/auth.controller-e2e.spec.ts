@@ -39,7 +39,7 @@ describe('AuthController (e2e)', () => {
   });
 
   describe('/auth/register (POST)', () => {
-    it('should register a new user', async () => {
+    it('should register a new user and return the user object and access token', async () => {
       const userDto = {
         name: 'Test User',
         email: 'test@example.com',
@@ -51,12 +51,20 @@ describe('AuthController (e2e)', () => {
         .send(userDto)
         .expect(201);
 
-      const { email } = response.body;
-      expect(email).toBe(userDto.email);
-
-      const user = await userRepository.findOneBy({ email });
+      // Validate the presence of user and accessToken in the response
+      const { user, accessToken } = response.body;
       expect(user).toBeDefined();
-      expect(await bcrypt.compare(userDto.password, user.password)).toBe(true);
+      expect(user.email).toBe(userDto.email);
+      expect(accessToken).toBeDefined();
+
+      // Ensure the user was saved to the database
+      const savedUser = await userRepository.findOneBy({
+        email: userDto.email,
+      });
+      expect(savedUser).toBeDefined();
+      expect(await bcrypt.compare(userDto.password, savedUser.password)).toBe(
+        true,
+      );
     });
   });
 

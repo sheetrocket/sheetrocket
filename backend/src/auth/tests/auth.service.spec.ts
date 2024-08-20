@@ -50,11 +50,12 @@ describe('AuthService', () => {
       ).rejects.toThrow(ConflictException);
     });
 
-    it('should create a new user and return it', async () => {
+    it('should create a new user and return it with the access token', async () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
       jest.spyOn(userRepository, 'create').mockReturnValueOnce(new User());
       jest.spyOn(userRepository, 'save').mockResolvedValueOnce(new User());
       jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce('hashedPassword');
+      jest.spyOn(jwtService, 'sign').mockReturnValueOnce('testAccessToken');
 
       const result = await service.register({
         email: 'test@example.com',
@@ -62,7 +63,11 @@ describe('AuthService', () => {
         password: 'password',
       });
 
-      expect(result).toBeInstanceOf(User);
+      // Check that the 'user' property is an instance of User
+      expect(result.user).toBeInstanceOf(User);
+      // Check that the accessToken is defined and correct
+      expect(result.accessToken).toBeDefined();
+      expect(result.accessToken).toBe('testAccessToken');
     });
   });
 
