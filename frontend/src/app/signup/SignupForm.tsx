@@ -1,20 +1,20 @@
 "use client";
 import React from "react";
 import { useFormik } from "formik";
-import { Button, styled } from "@mui/material";
+import { styled, Typography } from "@mui/material";
 import { SignupFormData } from "./SignupFormData";
 import validationSchema from "./validationSchema";
 import TextInput from "../common/components/TextInput";
+import { FormHeaderTitle } from "../common/components/FormHeaderTitle";
+import { AuthButton } from "../common/components/AuthButton";
+import Link from "next/link";
 
 const StyledForm = styled("form")(({ theme }) => ({
   width: "100%",
   marginTop: theme.spacing(3),
-  [theme.breakpoints.up("sm")]: {
-    width: "75%",
-  },
 }));
 
-const SignupForm = () => {
+export const SignupForm = () => {
   const formik = useFormik<SignupFormData>({
     initialValues: {
       name: "",
@@ -30,18 +30,22 @@ const SignupForm = () => {
 
   return (
     <StyledForm onSubmit={formik.handleSubmit}>
+      <FormHeaderTitle title='Sign up' />
       <TextInput
         label='Name'
+        placeholder='Your name'
         name='name'
         value={formik.values.name}
         onChange={formik.handleChange}
         error={formik.touched.name && Boolean(formik.errors.name)}
+        autoFocus
         helperText={
           formik.touched.name ? (formik.errors.name as string) : undefined
         }
       />
       <TextInput
         label='Email'
+        placeholder='Your email'
         name='email'
         type='email'
         value={formik.values.email}
@@ -53,6 +57,7 @@ const SignupForm = () => {
       />
       <TextInput
         label='Password'
+        placeholder='Your password'
         name='password'
         type='password'
         value={formik.values.password}
@@ -65,7 +70,8 @@ const SignupForm = () => {
         }
       />
       <TextInput
-        label='Confirm Password'
+        label='Confrim Password'
+        placeholder='Confirm password'
         name='confirmPassword'
         type='password'
         value={formik.values.confirmPassword}
@@ -80,11 +86,28 @@ const SignupForm = () => {
             : undefined
         }
       />
-      <Button type='submit' variant='contained' color='primary' fullWidth>
-        Sign Up
-      </Button>
+      <AuthButton label='Sign Up' />
+      <Typography sx={{ textAlign: "center", marginTop: "20px" }}>
+        Already have an account?{" "}
+        <Link
+          href='/login'
+          style={{ color: "teal", textDecoration: "underline" }}
+        >
+          Sign in
+        </Link>
+      </Typography>
+      <Typography
+        sx={{
+          textAlign: "center",
+          marginTop: "20px",
+          color: "teal",
+          fontWeight: "bold",
+          fontSize: "20px",
+          fontStyle: "oblique",
+        }}
+      >
+        Sheetrocket
+      </Typography>
     </StyledForm>
   );
 };
-
-export default SignupForm;
