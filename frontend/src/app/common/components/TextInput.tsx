@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { InputLabel, styled, TextField, TextFieldProps } from "@mui/material";
 
@@ -8,6 +9,7 @@ interface TextInputProps extends Omit<TextFieldProps, "value" | "onChange"> {
   value: string; // Explicitly define the value prop
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // Explicitly define the onChange prop
   error?: boolean;
+  htmlFor: string;
   helperText?: string; // Define helperText prop, which can be string or undefined
 }
 
@@ -43,16 +45,22 @@ const TextInput = ({
   value,
   onChange,
   error,
+  type,
   helperText,
+  htmlFor,
 }: TextInputProps) => {
   return (
     <>
-      <InputLabel sx={{ paddingBottom: "5px" }}>{label}</InputLabel>
+      <InputLabel htmlFor={htmlFor} sx={{ paddingBottom: "5px" }}>
+        {label}
+      </InputLabel>
       <CustomTextField
+        id={htmlFor}
         fullWidth
         variant='outlined'
         placeholder={placeholder}
         name={name}
+        type={type}
         value={value}
         onChange={onChange}
         error={error}

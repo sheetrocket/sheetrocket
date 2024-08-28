@@ -9,8 +9,8 @@ const validationSchema = Yup.object({
     .min(8, "Password should be at least 8 characters long")
     .required("Password is required"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
-    .required("Confirm Password is required"),
+    .oneOf([Yup.ref("password")], "Passwords don't match")
+    .required("This password field is also required"),
 });
 
 export default validationSchema;

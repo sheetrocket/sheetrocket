@@ -88,7 +88,7 @@ const SignupPage = () => {
             maxWidth: isMediumScreen ? "450px" : "100%",
           }}
         >
-          <SignupForm />
+          <SignupForm onSubmit={() => null} />
         </Box>
       </RightSection>
     </PageContainer>

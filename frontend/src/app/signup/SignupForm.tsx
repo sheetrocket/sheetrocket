@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { styled, Typography } from "@mui/material";
 import { SignupFormData } from "./SignupFormData";
@@ -14,7 +14,11 @@ const StyledForm = styled("form")(({ theme }) => ({
   marginTop: theme.spacing(3),
 }));
 
-export const SignupForm = () => {
+type Props = {
+  onSubmit: (formData: SignupFormData) => void;
+};
+
+export const SignupForm = ({ onSubmit }: Props) => {
   const formik = useFormik<SignupFormData>({
     initialValues: {
       name: "",
@@ -24,30 +28,42 @@ export const SignupForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      onSubmit(values);
     },
   });
+
+  useEffect(() => {
+    // Focus the first input field on render
+    const nameInput = document.getElementById("name");
+    if (nameInput) {
+      nameInput.focus();
+    }
+  }, []);
 
   return (
     <StyledForm onSubmit={formik.handleSubmit}>
       <FormHeaderTitle title='Sign up' />
       <TextInput
+        id='name'
         label='Name'
         placeholder='Your name'
         name='name'
+        htmlFor='name'
+        type='text'
         value={formik.values.name}
         onChange={formik.handleChange}
         error={formik.touched.name && Boolean(formik.errors.name)}
-        autoFocus
         helperText={
           formik.touched.name ? (formik.errors.name as string) : undefined
         }
       />
       <TextInput
+        id='email'
         label='Email'
         placeholder='Your email'
         name='email'
         type='email'
+        htmlFor='email'
         value={formik.values.email}
         onChange={formik.handleChange}
         error={formik.touched.email && Boolean(formik.errors.email)}
@@ -56,9 +72,11 @@ export const SignupForm = () => {
         }
       />
       <TextInput
+        id='password'
         label='Password'
         placeholder='Your password'
         name='password'
+        htmlFor='password'
         type='password'
         value={formik.values.password}
         onChange={formik.handleChange}
@@ -70,10 +88,12 @@ export const SignupForm = () => {
         }
       />
       <TextInput
-        label='Confrim Password'
+        id='confirmPassword'
+        label='Confirm Password'
         placeholder='Confirm password'
         name='confirmPassword'
         type='password'
+        htmlFor='password'
         value={formik.values.confirmPassword}
         onChange={formik.handleChange}
         error={
