@@ -1,12 +1,6 @@
 "use client";
 import React from "react";
-import {
-  Box,
-  styled,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
 import { SignupForm } from "./SignupForm";
 
 const PageContainer = styled("div")(({ theme }) => ({
@@ -43,9 +37,6 @@ const RightSection = styled("div")(({ theme }) => ({
 }));
 
 const SignupPage = () => {
-  const theme = useTheme();
-  const isMediumScreen = useMediaQuery(theme.breakpoints.up("sm"));
-
   return (
     <PageContainer>
       <LeftSection>
@@ -57,8 +48,8 @@ const SignupPage = () => {
             fontWeight: "bold",
             marginTop: "50px",
             color: "#fff",
-            width: isMediumScreen ? "80%" : "65%",
           }}
+          className='sm:w-[80%] w-[65%]'
         >
           Sign up for free and start building in minutes....
         </Typography>
@@ -69,9 +60,8 @@ const SignupPage = () => {
             fontSize: "20px",
             fontWeight: "500",
             marginTop: "50px",
-            color: "#fff",
-            width: isMediumScreen ? "55%" : "60%",
           }}
+          className='sm:w-[55%] w-[60%]  text-[#fff]'
         >
           Unleash the power of your spreadsheets. Build dynamic CMS solutions
           with ease.
@@ -79,15 +69,7 @@ const SignupPage = () => {
       </LeftSection>
 
       <RightSection>
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            maxWidth: isMediumScreen ? "450px" : "100%",
-          }}
-        >
+        <Box className='sm:max-w-[450px] max-w-[100%] w-[100%] flex flex-col items-center'>
           <SignupForm onSubmit={() => null} />
         </Box>
       </RightSection>
