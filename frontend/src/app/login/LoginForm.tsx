@@ -73,7 +73,7 @@ export const LoginForm = ({ onSubmit }: Props) => {
             : undefined
         }
       />
-      <AuthButton label='Sign Up' />
+      <AuthButton label='Sign In' />
 
       <Typography sx={{ textAlign: "center", marginTop: "20px" }}>
         Not having an account?{" "}
