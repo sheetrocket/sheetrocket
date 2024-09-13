@@ -28,7 +28,8 @@ export const SignupForm = ({ onSubmit }: Props) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      onSubmit(values);
+      const { confirmPassword, ...dataToSend } = values;
+      onSubmit(dataToSend);
     },
   });
 

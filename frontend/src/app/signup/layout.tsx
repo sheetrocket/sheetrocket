@@ -8,11 +8,7 @@ export const metadata: Metadata = {
   description: "Get started with Sheetrocket: Sign up",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: any) {
   return (
     <html lang='en'>
       <body className={inter.className}>

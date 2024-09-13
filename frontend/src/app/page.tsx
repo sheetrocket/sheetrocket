@@ -1,4 +1,3 @@
-"use client";
 import { Box, Button, Container, Typography, styled } from "@mui/material";
 import Link from "next/link";
 
@@ -37,11 +36,12 @@ const StyledTypography = styled(Typography)<{ component: React.ElementType }>(
 );
 
 const BodyTypography = styled(Typography)(({ theme }) => ({
-  fontSize: 20,
+  fontSize: "18px",
   color: "#333",
-  width: "80%",
-  [theme.breakpoints.up("md")]: {
+  width: "95%",
+  [theme.breakpoints.up("sm")]: {
     fontSize: "20px",
+    width: "80%",
   },
 }));
 
@@ -84,6 +84,12 @@ const StarButton = styled(Button)<{ component: React.ElementType }>(
 );
 
 const Home = () => {
+  return <LandingPage />;
+};
+
+export default Home;
+
+export const LandingPage = () => {
   return (
     <Section component='section' id='home'>
       <StyledContainer>
@@ -111,5 +117,3 @@ const Home = () => {
     </Section>
   );
 };
-
-export default Home;

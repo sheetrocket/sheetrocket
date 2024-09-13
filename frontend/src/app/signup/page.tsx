@@ -1,7 +1,10 @@
-"use client";
+/*"use client";
 import React from "react";
 import { Box, styled, Typography } from "@mui/material";
 import { SignupForm } from "./SignupForm";
+import { useAppDispatch, useAppSelector } from "../redux/reduxHooks";
+import { signup } from "../redux/slice/authSlice";
+import { UserData } from "../services/authService";
 
 const PageContainer = styled("div")(({ theme }) => ({
   display: "grid",
@@ -37,6 +40,23 @@ const RightSection = styled("div")(({ theme }) => ({
 }));
 
 const SignupPage = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const isLoading = useAppSelector((state) => state.auth.isLoading);
+  const error = useAppSelector((state) => state.auth.error);
+
+  const handleSignup = async (formData: UserData) => {
+    try {
+      const result = await dispatch(signup(formData)).unwrap();
+      // result will be the payload from the fulfilled action
+      console.log("Signup successful!", result);
+
+      console.log("Success");
+    } catch (err) {
+      console.error("Signup failed", err);
+    }
+  };
+
   return (
     <PageContainer>
       <LeftSection>
@@ -70,7 +90,7 @@ const SignupPage = () => {
 
       <RightSection>
         <Box className='sm:max-w-[450px] max-w-[100%] w-[100%] flex flex-col items-center'>
-          <SignupForm onSubmit={() => null} />
+          <SignupForm onSubmit={handleSignup} />
         </Box>
       </RightSection>
     </PageContainer>
@@ -78,3 +98,4 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
+*/

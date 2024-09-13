@@ -6,7 +6,7 @@ interface TextInputProps extends Omit<TextFieldProps, "value" | "onChange"> {
   name: string;
   placeholder: string;
   label: string;
-  value: string; // Explicitly define the value prop
+  value?: string; // Explicitly define the value prop
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // Explicitly define the onChange prop
   error?: boolean;
   htmlFor: string;
