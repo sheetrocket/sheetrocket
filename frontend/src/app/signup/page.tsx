@@ -5,6 +5,7 @@ import { SignupForm } from "./SignupForm";
 import { useAppDispatch, useAppSelector } from "../redux/reduxHooks";
 import { signup } from "../redux/slice/authSlice";
 import { UserData } from "../services/authService";
+import { useRouter } from "next/navigation";
 
 const PageContainer = styled("div")(({ theme }) => ({
   display: "grid",
@@ -43,17 +44,18 @@ const SignupPage = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const isLoading = useAppSelector((state) => state.auth.isLoading);
-  const error = useAppSelector((state) => state.auth.error);
+
+  const router = useRouter();
 
   const handleSignup = async (formData: UserData) => {
     try {
       const result = await dispatch(signup(formData)).unwrap();
       // result will be the payload from the fulfilled action
       console.log("Signup successful!", result);
-
-      console.log("Success");
+      localStorage.setItem("token", result.accessToken);
+      router.push("/dashboard");
     } catch (err) {
-      console.error("Signup failed", err);
+      console.log(err);
     }
   };
 
@@ -89,7 +91,7 @@ const SignupPage = () => {
       </LeftSection>
 
       <RightSection>
-        <Box className='sm:max-w-[450px] max-w-[100%] w-[100%] flex flex-col items-center'>
+        <Box className='sm:max-w-[450px]  max-w-[100%]  w-[90%] flex flex-col items-center'>
           <SignupForm onSubmit={handleSignup} />
         </Box>
       </RightSection>

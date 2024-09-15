@@ -26,7 +26,8 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
       borderColor: "#adb5bd",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#6c757d",
+      borderColor: "green",
+      borderWidth: 1,
     },
   },
   "& .MuiInputBase-input": {

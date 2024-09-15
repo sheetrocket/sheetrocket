@@ -7,7 +7,14 @@ import validationSchema from "./validationSchema";
 import TextInput from "../common/components/TextInput";
 import { FormHeaderTitle } from "../common/components/FormHeaderTitle";
 import { AuthButton } from "../common/components/AuthButton";
+
 import Link from "next/link";
+import { useAppSelector } from "../redux/reduxHooks";
+import {
+  selectSignupError,
+  selectIsLoading,
+} from "../redux/selectors/auth_selector";
+import { CustomAlert } from "../common/components/CustomAlert";
 
 const StyledForm = styled("form")(({ theme }) => ({
   width: "100%",
@@ -19,6 +26,9 @@ type Props = {
 };
 
 export const SignupForm = ({ onSubmit }: Props) => {
+  const errorMessage = useAppSelector(selectSignupError);
+  const isLoading = useAppSelector(selectIsLoading);
+
   const formik = useFormik<SignupFormData>({
     initialValues: {
       name: "",
@@ -36,6 +46,7 @@ export const SignupForm = ({ onSubmit }: Props) => {
   useEffect(() => {
     // Focus the first input field on render
     const nameInput = document.getElementById("name");
+
     if (nameInput) {
       nameInput.focus();
     }
@@ -44,6 +55,7 @@ export const SignupForm = ({ onSubmit }: Props) => {
   return (
     <StyledForm onSubmit={formik.handleSubmit}>
       <FormHeaderTitle title='Sign up' />
+      <CustomAlert message={errorMessage} visible={!!errorMessage} />
       <TextInput
         id='name'
         label='Name'
@@ -107,7 +119,7 @@ export const SignupForm = ({ onSubmit }: Props) => {
             : undefined
         }
       />
-      <AuthButton label='Sign Up' />
+      <AuthButton label='Sign Up' loading={isLoading} />
       <Typography sx={{ textAlign: "center", marginTop: "20px" }}>
         Already have an account?{" "}
         <Link
@@ -127,7 +139,7 @@ export const SignupForm = ({ onSubmit }: Props) => {
           fontStyle: "oblique",
         }}
       >
-        Sheetrocket
+        <Link href='/'>Sheetrocket</Link>
       </Typography>
     </StyledForm>
   );

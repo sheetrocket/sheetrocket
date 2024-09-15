@@ -12,14 +12,16 @@ interface AuthState {
   user: AuthSuccessResponse["user"] | null;
   accessToken: string | null;
   isLoading: boolean;
-  error: string | null;
+  loginError: string | null;
+  signupError: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
   accessToken: null,
   isLoading: false,
-  error: null,
+  loginError: null,
+  signupError: null,
 };
 
 // Type guard function to check if the response is an AuthSuccessResponse
@@ -90,14 +92,15 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.accessToken = null;
-      state.error = null;
+      state.signupError = null;
+      state.loginError = null;
     },
   },
   extraReducers: (builder) => {
     // Signup
     builder.addCase(signup.pending, (state) => {
       state.isLoading = true;
-      state.error = null;
+      state.signupError = null;
     });
     builder.addCase(
       signup.fulfilled,
@@ -111,14 +114,14 @@ const authSlice = createSlice({
       signup.rejected,
       (state, action: PayloadAction<AuthErrorResponse | undefined>) => {
         state.isLoading = false;
-        state.error = action.payload?.message || "Signup failed";
+        state.signupError = action.payload?.message || "Signup failed";
       }
     );
 
     // Login
     builder.addCase(login.pending, (state) => {
       state.isLoading = true;
-      state.error = null;
+      state.loginError = null;
     });
     builder.addCase(
       login.fulfilled,
@@ -132,7 +135,7 @@ const authSlice = createSlice({
       login.rejected,
       (state, action: PayloadAction<AuthErrorResponse | undefined>) => {
         state.isLoading = false;
-        state.error = action.payload?.message || "Login failed";
+        state.loginError = action.payload?.message || "Login failed";
       }
     );
   },

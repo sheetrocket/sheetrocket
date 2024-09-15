@@ -9,6 +9,12 @@ import { AuthButton } from "../common/components/AuthButton";
 import Link from "next/link";
 import { LoginFormData } from "./LoginFormData";
 import validationSchema from "./validationSchema";
+import { useAppSelector } from "../redux/reduxHooks";
+import {
+  selectLoginError,
+  selectIsLoading,
+} from "../redux/selectors/auth_selector";
+import { CustomAlert } from "../common/components/CustomAlert";
 
 const StyledForm = styled("form")(({ theme }) => ({
   width: "100%",
@@ -20,6 +26,9 @@ type Props = {
 };
 
 export const LoginForm = ({ onSubmit }: Props) => {
+  let errorMessage = useAppSelector(selectLoginError);
+  const isLoading = useAppSelector(selectIsLoading);
+
   const formik = useFormik<LoginFormData>({
     initialValues: {
       email: "",
@@ -42,7 +51,7 @@ export const LoginForm = ({ onSubmit }: Props) => {
   return (
     <StyledForm onSubmit={formik.handleSubmit}>
       <FormHeaderTitle title='Sign in' />
-
+      <CustomAlert message={errorMessage} visible={!!errorMessage} />
       <TextInput
         id='email'
         label='Email'
@@ -66,14 +75,9 @@ export const LoginForm = ({ onSubmit }: Props) => {
         type='password'
         value={formik.values.password}
         onChange={formik.handleChange}
-        error={formik.touched.password && Boolean(formik.errors.password)}
-        helperText={
-          formik.touched.password
-            ? (formik.errors.password as string)
-            : undefined
-        }
       />
-      <AuthButton label='Sign In' />
+
+      <AuthButton label='Sign In' loading={isLoading} />
 
       <Typography sx={{ textAlign: "center", marginTop: "20px" }}>
         Not having an account?{" "}
@@ -94,7 +98,7 @@ export const LoginForm = ({ onSubmit }: Props) => {
           fontStyle: "oblique",
         }}
       >
-        Sheetrocket
+        <Link href='/'>Sheetrocket</Link>
       </Typography>
     </StyledForm>
   );

@@ -2,6 +2,10 @@
 import React from "react";
 import { Box, styled, Typography } from "@mui/material";
 import { LoginForm } from "./LoginForm";
+import { useAppDispatch } from "../redux/reduxHooks";
+import { useRouter } from "next/navigation";
+import { LoginFormData } from "./LoginFormData";
+import { login } from "../redux/slice/authSlice";
 
 const PageContainer = styled("div")(({ theme }) => ({
   display: "grid",
@@ -37,6 +41,22 @@ const RightSection = styled("div")(({ theme }) => ({
 }));
 
 const LoginPage = () => {
+  const dispatch = useAppDispatch();
+
+  const router = useRouter();
+
+  const handleLogin = async (formData: LoginFormData) => {
+    try {
+      const result = await dispatch(login(formData)).unwrap();
+      // result will be the payload from the fulfilled action
+      console.log("Login successful!", result);
+      localStorage.setItem("token", result.accessToken);
+      router.push("/dashboard");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <PageContainer>
       <LeftSection>
@@ -69,8 +89,8 @@ const LoginPage = () => {
       </LeftSection>
 
       <RightSection>
-        <Box className='sm:max-w-[450px] max-w-[100%] w-[100%] flex flex-col items-center'>
-          <LoginForm onSubmit={() => null} />
+        <Box className='sm:max-w-[450px] max-w-[100%] w-[90%] flex flex-col items-center'>
+          <LoginForm onSubmit={handleLogin} />
         </Box>
       </RightSection>
     </PageContainer>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://127.0.0.1:5000";
 
 // Create an Axios instance with default configuration
 const axiosInstance = axios.create({
@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
-    // Handle request error here
+    // Handle request error
     return Promise.reject(error);
   }
 );
