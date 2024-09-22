@@ -2,10 +2,16 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LoginForm } from "./LoginForm";
+import { Provider } from "react-redux";
+import store from "../redux/store";
 
 describe("LoginForm", () => {
   test("renders signup form", () => {
-    render(<LoginForm onSubmit={() => null} />);
+    render(
+      <Provider store={store}>
+        <LoginForm onSubmit={() => null} />
+      </Provider>
+    );
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
 
@@ -16,14 +22,22 @@ describe("LoginForm", () => {
 
   // Test for auto-focusing the first input field
   test("should auto-focus the first input field when the form is rendered", async () => {
-    render(<LoginForm onSubmit={() => null} />);
+    render(
+      <Provider store={store}>
+        <LoginForm onSubmit={() => null} />
+      </Provider>
+    );
 
     // assert
     await waitFor(() => expect(screen.getByLabelText(/Email/i)).toHaveFocus());
   });
 
   test("shows validation errors for empty fields", async () => {
-    render(<LoginForm onSubmit={() => null} />);
+    render(
+      <Provider store={store}>
+        <LoginForm onSubmit={() => null} />
+      </Provider>
+    );
 
     const signInButton = screen.getByRole("button", { name: /Sign In/i });
     userEvent.click(signInButton);
@@ -36,7 +50,11 @@ describe("LoginForm", () => {
 
   it("shows an error if the email is invalid", async () => {
     const handleSubmit = jest.fn();
-    render(<LoginForm onSubmit={handleSubmit} />);
+    render(
+      <Provider store={store}>
+        <LoginForm onSubmit={handleSubmit} />
+      </Provider>
+    );
 
     // Type invalid email
     const emailInput = screen.getByLabelText(/Email/i);
@@ -58,7 +76,11 @@ describe("LoginForm", () => {
 
   test("submits form with valid input values", async () => {
     const handleSubmit = jest.fn();
-    render(<LoginForm onSubmit={handleSubmit} />);
+    render(
+      <Provider store={store}>
+        <LoginForm onSubmit={handleSubmit} />
+      </Provider>
+    );
 
     // Fill out the form
     userEvent.type(screen.getByLabelText(/Email/i), "allen@example.com");

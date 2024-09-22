@@ -42,6 +42,7 @@ axiosInstance.interceptors.response.use(
 export const AUTH_ENDPOINTS = {
   signup: "/auth/register",
   login: "/auth/login",
+  current_user: "/auth/current-user",
 };
 
 export default axiosInstance;

@@ -5,7 +5,11 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '../user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -93,6 +97,36 @@ describe('AuthService', () => {
       });
 
       expect(result).toEqual({ accessToken: 'accessToken' });
+    });
+  });
+
+  describe('getUserById', () => {
+    it('should return user if user exists', async () => {
+      const user = new User();
+      user.id = 1;
+      user.name = 'Test User';
+      user.email = 'user@gmail.com';
+      user.password = 'hashedPassword';
+
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(user);
+
+      const result = await service.getUserById(1);
+
+      // Ensure the user is returned without the password field
+      expect(result).toEqual({
+        user: {
+          id: 1,
+          name: 'Test User',
+          email: 'user@gmail.com',
+          password: 'hashedPassword',
+        },
+      });
+    });
+
+    it('should throw NotFoundException if user is not found', async () => {
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
+
+      await expect(service.getUserById(1)).rejects.toThrow(NotFoundException);
     });
   });
 });

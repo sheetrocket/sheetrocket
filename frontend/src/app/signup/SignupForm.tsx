@@ -9,12 +9,10 @@ import { FormHeaderTitle } from "../common/components/FormHeaderTitle";
 import { AuthButton } from "../common/components/AuthButton";
 
 import Link from "next/link";
-import { useAppSelector } from "../redux/reduxHooks";
-import {
-  selectSignupError,
-  selectIsLoading,
-} from "../redux/selectors/auth_selector";
+import { useAppDispatch, useAppSelector } from "../redux/reduxHooks";
+import { selectError, selectIsLoading } from "../redux/selectors/auth_selector";
 import { CustomAlert } from "../common/components/CustomAlert";
+import { clearError } from "../redux/slice/authSlice";
 
 const StyledForm = styled("form")(({ theme }) => ({
   width: "100%",
@@ -26,8 +24,9 @@ type Props = {
 };
 
 export const SignupForm = ({ onSubmit }: Props) => {
-  const errorMessage = useAppSelector(selectSignupError);
+  let errorMessage = useAppSelector(selectError);
   const isLoading = useAppSelector(selectIsLoading);
+  const dispatch = useAppDispatch();
 
   const formik = useFormik<SignupFormData>({
     initialValues: {
@@ -50,12 +49,16 @@ export const SignupForm = ({ onSubmit }: Props) => {
     if (nameInput) {
       nameInput.focus();
     }
-  }, []);
+    dispatch(clearError());
+  }, [dispatch]);
 
   return (
     <StyledForm onSubmit={formik.handleSubmit}>
       <FormHeaderTitle title='Sign up' />
-      <CustomAlert message={errorMessage} visible={!!errorMessage} />
+      {errorMessage && (
+        <CustomAlert message={errorMessage} visible={!!errorMessage} />
+      )}
+
       <TextInput
         id='name'
         label='Name'

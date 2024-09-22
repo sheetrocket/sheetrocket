@@ -49,7 +49,6 @@ const LoginPage = () => {
     try {
       const result = await dispatch(login(formData)).unwrap();
       // result will be the payload from the fulfilled action
-      console.log("Login successful!", result);
       localStorage.setItem("token", result.accessToken);
       router.push("/dashboard");
     } catch (err) {

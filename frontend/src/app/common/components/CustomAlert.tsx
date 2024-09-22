@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Alert, AlertProps, IconButton } from "@mui/material";
+import React from "react";
+import { Alert, AlertProps } from "@mui/material";
 
 interface CustomAlertProps extends AlertProps {
   message: string | null;

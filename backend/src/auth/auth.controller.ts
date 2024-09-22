@@ -1,7 +1,23 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  UseGuards,
+  Get,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import {} from '@nestjs/passport';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { GetCurrentUserDto } from './dto/current-user.dto';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
+
+interface RequestWithUser extends Request {
+  user: JwtPayload;
+}
 
 @Controller('auth')
 export class AuthController {
@@ -9,7 +25,6 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
-    console.log('User registration');
     return this.authService.register(createUserDto);
   }
 
@@ -17,5 +32,14 @@ export class AuthController {
   @HttpCode(200)
   async login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
+  }
+
+  // Get the currently logged-in user's information
+  @UseGuards(JwtAuthGuard)
+  @Get('current-user')
+  async getCurrentUser(
+    @Request() req: RequestWithUser,
+  ): Promise<GetCurrentUserDto> {
+    return this.authService.getUserById(req.user.userId);
   }
 }

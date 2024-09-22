@@ -2,7 +2,7 @@
 import React from "react";
 import { Box, styled, Typography } from "@mui/material";
 import { SignupForm } from "./SignupForm";
-import { useAppDispatch, useAppSelector } from "../redux/reduxHooks";
+import { useAppDispatch } from "../redux/reduxHooks";
 import { signup } from "../redux/slice/authSlice";
 import { UserData } from "../services/authService";
 import { useRouter } from "next/navigation";
@@ -42,16 +42,12 @@ const RightSection = styled("div")(({ theme }) => ({
 
 const SignupPage = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth.user);
-  const isLoading = useAppSelector((state) => state.auth.isLoading);
-
   const router = useRouter();
 
   const handleSignup = async (formData: UserData) => {
     try {
       const result = await dispatch(signup(formData)).unwrap();
       // result will be the payload from the fulfilled action
-      console.log("Signup successful!", result);
       localStorage.setItem("token", result.accessToken);
       router.push("/dashboard");
     } catch (err) {

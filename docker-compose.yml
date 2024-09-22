@@ -39,6 +39,7 @@ services:
       - DATABASE_USER=my_db_user
       - DATABASE_PASSWORD=my_db_password
       - DATABASE_NAME=my_db_name
+      - JWT_SECRET_KEY=my_jwt_secret
     depends_on:
       - postgres
 

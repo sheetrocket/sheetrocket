@@ -2,10 +2,16 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SignupForm } from "./SignupForm";
+import { Provider } from "react-redux";
+import store from "../redux/store";
 
 describe("SignupForm", () => {
   test("renders signup form", () => {
-    render(<SignupForm onSubmit={() => null} />);
+    render(
+      <Provider store={store}>
+        <SignupForm onSubmit={() => null} />
+      </Provider>
+    );
     expect(screen.getByLabelText(/Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
@@ -17,14 +23,22 @@ describe("SignupForm", () => {
 
   // Test for auto-focusing the first input field
   test("should auto-focus the first input field when the form is rendered", async () => {
-    render(<SignupForm onSubmit={() => null} />);
+    render(
+      <Provider store={store}>
+        <SignupForm onSubmit={() => null} />
+      </Provider>
+    );
 
     // assert
     await waitFor(() => expect(screen.getByLabelText(/Name/i)).toHaveFocus());
   });
 
   test("shows validation errors for empty fields", async () => {
-    render(<SignupForm onSubmit={() => null} />);
+    render(
+      <Provider store={store}>
+        <SignupForm onSubmit={() => null} />
+      </Provider>
+    );
 
     const signUpButton = screen.getByRole("button", { name: /Sign Up/i });
     userEvent.click(signUpButton);
@@ -41,7 +55,11 @@ describe("SignupForm", () => {
 
   it("shows an error if the email is invalid", async () => {
     const handleSubmit = jest.fn();
-    render(<SignupForm onSubmit={handleSubmit} />);
+    render(
+      <Provider store={store}>
+        <SignupForm onSubmit={handleSubmit} />
+      </Provider>
+    );
 
     // Type invalid email
     const emailInput = screen.getByLabelText(/Email/i);
@@ -63,7 +81,11 @@ describe("SignupForm", () => {
 
   // Test for password mismatch
   it("shows an error if passwords do not match", async () => {
-    render(<SignupForm onSubmit={() => null} />);
+    render(
+      <Provider store={store}>
+        <SignupForm onSubmit={() => null} />
+      </Provider>
+    );
 
     // Fill out the form with mismatching passwords
     const passwordInput = screen.getByLabelText(/Password/i);
@@ -86,7 +108,11 @@ describe("SignupForm", () => {
 
   test("submits form with valid input values", async () => {
     const handleSubmit = jest.fn();
-    render(<SignupForm onSubmit={handleSubmit} />);
+    render(
+      <Provider store={store}>
+        <SignupForm onSubmit={handleSubmit} />
+      </Provider>
+    );
 
     // Fill out the form
     userEvent.type(screen.getByLabelText(/Name/i), "Allen Jones");
