@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { ProviderWrapper } from "@/ProviderWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sheetrocket",
-  description: "Use spreadsheet as a CMS",
+  title: "Sign in - Sheetrocket",
+  description: "Sign in into your sheetrocket account",
 };
 
 export default function RootLayout({
@@ -17,9 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <ProviderWrapper>
-        <body className={inter.className}>{children}</body>
-      </ProviderWrapper>
+      <body className={inter.className}>
+        <main className='w-full h-full'>{children}</main>
+      </body>
     </html>
   );
 }

@@ -1,113 +1,173 @@
-import Image from "next/image";
+"use client";
+import { Box, Button, Container, Typography, styled } from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { fetchCurrentUser } from "./redux/slice/authSlice";
+import { useAppDispatch, useAppSelector } from "./redux/reduxHooks";
+import { RootState } from "./redux/store";
 
-export default function Home() {
+// Styled components
+const Section = styled(Box)({
+  overflow: "auto",
+  background:
+    "linear-gradient(135deg, #ffffff 0%, #e0f2f1 40%, #b2dfdb 70%, #ffffff 100%)",
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+});
+
+const StyledContainer = styled(Container)(({ theme }) => ({
+  marginTop: theme.spacing(20),
+  width: "90%",
+  maxWidth: "800px",
+  height: "auto",
+  mx: "auto",
+  flexDirection: "column",
+  textAlign: "center",
+  display: "flex",
+  gap: theme.spacing(6),
+  alignItems: "center",
+}));
+
+const StyledTypography = styled(Typography)<{ component: React.ElementType }>(
+  ({ theme }) => ({
+    fontWeight: "bold",
+    color: "teal",
+    fontSize: "30px",
+    [theme.breakpoints.up("md")]: {
+      fontSize: "50px",
+    },
+  })
+);
+
+const BodyTypography = styled(Typography)(({ theme }) => ({
+  fontSize: "18px",
+  color: "#333",
+  width: "95%",
+  [theme.breakpoints.up("sm")]: {
+    fontSize: "20px",
+    width: "80%",
+  },
+}));
+
+const ButtonContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column", // Default for small screens
+  alignItems: "center",
+  justifyContent: "center",
+  gap: theme.spacing(4),
+  paddingBottom: "40px",
+  [theme.breakpoints.up("sm")]: {
+    flexDirection: "row", // Override for screens larger than 'sm'
+  },
+}));
+const GetStartedButton = styled(Button)<{ component: React.ElementType }>({
+  padding: "10px 30px",
+  borderRadius: "5px",
+  fontSize: "1rem",
+  fontWeight: "bold",
+  backgroundColor: "teal",
+  textTransform: "none",
+  "&:hover": {
+    backgroundColor: "teal",
+  },
+});
+
+const StarButton = styled(Button)<{ component: React.ElementType }>(
+  ({ theme }) => ({
+    padding: "10px 20px",
+    borderRadius: "5px",
+    fontSize: "1rem",
+    fontWeight: "bold",
+    backgroundColor: theme.palette.text.primary,
+    color: theme.palette.common.white,
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: theme.palette.text.primary,
+    },
+  })
+);
+
+const Home = () => {
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const router = useRouter();
+
+  useEffect(() => {
+    /***
+   We're keeping this function (logic) here temporarily. 
+   It retrieves the token from localStorage and sends it to 
+   the "/current-user" endpoint to verify the token and fetch the current user. 
+   Once the request is completed successfully (handled in authSlice.ts), 
+   the isAuthenticated state in authSlice.ts is updated to true.
+   In this logic, if the user is authenticated, 
+   they will be redirected to the 
+   dashboard (the dashboard will be implemented in another branch). 
+   For now, we're leaving this as is because we might 
+   add a launcher page 
+   or a blank page to display while the request is pending or loading, 
+   before showing either the landing page or dashboard.
+  Alternatively, 
+  we may set the landing page as the default component, 
+  adding this logic to a button in the navigation header. 
+  The button could display either:
+   <button>Sign in</button> or <button>Dashboard</button> (depending on auth state). 
+  While the request is pending, neither button will be visible until the request is 
+  completed successfully.
+  ****/
+    const checkAuthStatus = async () => {
+      const token = localStorage.getItem("token"); // Get the token from localStorage
+
+      if (token) {
+        try {
+          // Dispatch fetchCurrentUser to validate token and get user data
+          await dispatch(fetchCurrentUser()).unwrap();
+
+          if (isAuthenticated) {
+            // If authenticated, redirect to the dashboard
+            router.push("/dashboard");
+          }
+        } catch (error) {
+          console.error("Failed to fetch current user:", error);
+        }
+      }
+    };
+    checkAuthStatus();
+  }, [dispatch, isAuthenticated, router]);
+
+  // Render landing page by default if not authenticated or fetching user
+  return <LandingPage />;
+};
+
+export default Home;
+
+export const LandingPage = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <Section component='section' id='home'>
+      <StyledContainer>
+        <StyledTypography variant='h3' component='h1' gutterBottom>
+          Convert Your Google Sheets into a JSON API & Use as a CMS.
+        </StyledTypography>
+        <BodyTypography variant='body1' paragraph>
+          Sheetrocket empowers you to transform Google Sheets into a dynamic CMS
+          without API keys. Manage website content and updates directly from
+          your sheets. Experience hassle-free content management,
+          revolutionizing your workflow.
+        </BodyTypography>
+        <ButtonContainer>
+          <GetStartedButton component={Link} href='/signup' variant='contained'>
+            Get Started
+          </GetStartedButton>
+          <StarButton
+            component={Link}
+            href='https://github.com/sheetrocket/sheetrocket'
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+            Star on GitHub
+          </StarButton>
+        </ButtonContainer>
+      </StyledContainer>
+    </Section>
   );
-}
+};
