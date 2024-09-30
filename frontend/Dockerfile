@@ -22,5 +22,5 @@ EXPOSE 3000
 # Set NODE_ENV to production
 ENV NODE_ENV production
 
-# Command to run Next.js
-CMD ["npm", "start"]
+# Command to run the next.js app
+CMD ["npm", "run", "dev"]

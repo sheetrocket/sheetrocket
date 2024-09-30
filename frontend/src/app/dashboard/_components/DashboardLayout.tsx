@@ -2,10 +2,9 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/material/Menu";
+import { MenuOutlined } from "@mui/icons-material";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -93,10 +92,10 @@ export default function DashboardLayout({ children }: Props) {
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { md: "none" } }}
           >
-            <MenuIcon sx={{ color: "#fff" }} open={false} />
+            <MenuOutlined />
           </IconButton>
           <Typography variant='h6' noWrap component='div'>
-            Dashboard
+            Dashboard2
           </Typography>
         </Toolbar>
       </AppBar>
