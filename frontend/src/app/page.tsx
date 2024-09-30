@@ -90,7 +90,7 @@ const StarButton = styled(Button)<{ component: React.ElementType }>(
   })
 );
 
-const Home = () => {
+const Page = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const router = useRouter();
@@ -131,6 +131,7 @@ const Home = () => {
           }
         } catch (error) {
           console.error("Failed to fetch current user:", error);
+          router.push("/");
         }
       }
     };
@@ -141,9 +142,9 @@ const Home = () => {
   return <LandingPage />;
 };
 
-export default Home;
+export default Page;
 
-export const LandingPage = () => {
+const LandingPage = () => {
   return (
     <Section component='section' id='home'>
       <StyledContainer>

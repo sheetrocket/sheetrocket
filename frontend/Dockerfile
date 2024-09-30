@@ -1,13 +1,11 @@
 # Dockerfile for frontend (Next.js)
 FROM node:18.18
 
-# Set working directory inside the container
+# Set working directory for the frontend
 WORKDIR /app/frontend
 
 # Copy package.json and package-lock.json to the working directory
-COPY frontend/package.json ./
-
-RUN npm install -g next
+COPY frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
@@ -15,8 +13,14 @@ RUN npm install
 # Copy the rest of the application code to the working directory
 COPY frontend/ .
 
+# Build the Next.js app
+RUN npm run build
+
 # Expose the port Next.js will run on
 EXPOSE 3000
 
+# Set NODE_ENV to production
+ENV NODE_ENV production
+
 # Command to run Next.js
-CMD ["next", "dev"]
+CMD ["npm", "start"]
