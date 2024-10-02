@@ -95,7 +95,7 @@ export default function DashboardLayout({ children }: Props) {
             <MenuOutlined />
           </IconButton>
           <Typography variant='h6' noWrap component='div'>
-            Dashboard2
+            Dashboard
           </Typography>
         </Toolbar>
       </AppBar>

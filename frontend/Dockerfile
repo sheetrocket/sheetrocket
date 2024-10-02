@@ -20,7 +20,7 @@ RUN npm run build
 EXPOSE 3000
 
 # Set NODE_ENV to production
-ENV NODE_ENV production
+ENV NODE_ENV development
 
 # Command to run the next.js app
 CMD ["npm", "run", "dev"]
