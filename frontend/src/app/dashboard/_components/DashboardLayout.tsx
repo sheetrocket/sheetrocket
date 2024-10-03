@@ -36,6 +36,7 @@ const sidebarData = [
     routeName: "/dashboard/spreadsheets",
   },
   { name: "Usage", icon: <Icon.BarChart />, routeName: "/dashboard/usage" },
+  { name: "Logout", icon: <Icon.LogOut />, routeName: "" },
 ];
 
 export default function DashboardLayout({ children }: Props) {
@@ -68,7 +69,7 @@ export default function DashboardLayout({ children }: Props) {
       <Toolbar sx={{ marginTop: "20px" }} />
       <List>
         {sidebarData.map((item) => (
-          <ListItem key={item.name}>
+          <ListItem key={item.name} sx={{ marginTop: "10px" }}>
             <Link href={item.routeName} className='w-[100%]'>
               <ListItemButton
                 component='span'
@@ -90,7 +91,7 @@ export default function DashboardLayout({ children }: Props) {
                 <ListItemText
                   primary={item.name}
                   primaryTypographyProps={{
-                    fontSize: "13px",
+                    fontSize: "14px",
                     fontWeight: "400",
                   }}
                 />
