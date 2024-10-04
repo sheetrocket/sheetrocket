@@ -21,6 +21,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { usePathname } from "next/navigation";
+import { useAppSelector } from "@/app/redux/reduxHooks";
 
 const drawerWidth = 240;
 
@@ -43,6 +44,8 @@ export default function DashboardLayout({ children }: Props) {
   const currentPath = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false); // Track client-side mount
+
+  const currentUser = useAppSelector((state) => state.auth.user);
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -150,7 +153,7 @@ export default function DashboardLayout({ children }: Props) {
           >
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='User avatar' src='' />
+                <Avatar alt='User avatar' src='' className='cusor-pointer' />
               </IconButton>
             </Tooltip>
             <Menu
@@ -169,9 +172,11 @@ export default function DashboardLayout({ children }: Props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography sx={{ textAlign: "center" }}>Logout</Typography>
-              </MenuItem>
+              <Box className='h-[200px] w-[200px]'>
+                <Box>
+                  <Typography>{currentUser?.name}</Typography>
+                </Box>
+              </Box>
             </Menu>
           </Box>
         </Toolbar>
