@@ -5,7 +5,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import { MenuOutlined } from "@mui/icons-material";
-
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -14,7 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import * as Icon from "react-feather"; // Importing react-feather icons
+import * as Icon from "react-feather";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
@@ -22,14 +21,25 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "@/app/redux/reduxHooks";
+import Divider from "@mui/material/Divider";
+import { styled } from "@mui/material/styles"; // Import styled utility
 
 const drawerWidth = 240;
+
+// Custom Styled Menu paper
+const CustomMenu = styled(Menu)(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: "12px",
+    boxShadow: "0px 5px 15px rgba(0,0,0,0.2)",
+    border: `1px solid ${theme.palette.divider}`,
+    marginTop: "50px",
+  },
+}));
 
 interface Props {
   children: React.ReactNode;
 }
 
-// Sidebar data with react-feather icons
 const sidebarData = [
   {
     name: "Spreadsheets APIs",
@@ -43,7 +53,7 @@ const sidebarData = [
 export default function DashboardLayout({ children }: Props) {
   const currentPath = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false); // Track client-side mount
+  const [isMounted, setIsMounted] = useState(false);
 
   const currentUser = useAppSelector((state) => state.auth.user);
 
@@ -64,7 +74,7 @@ export default function DashboardLayout({ children }: Props) {
   };
 
   useEffect(() => {
-    setIsMounted(true); // Mark the component as mounted when client-side rendering occurs
+    setIsMounted(true);
   }, []);
 
   const drawer = (
@@ -107,7 +117,7 @@ export default function DashboardLayout({ children }: Props) {
   );
 
   if (!isMounted) {
-    return null; // Prevent rendering until after hydration
+    return null;
   }
 
   return (
@@ -151,13 +161,12 @@ export default function DashboardLayout({ children }: Props) {
               justifyContent: "flex-end",
             }}
           >
-            <Tooltip title='Open settings'>
+            <Tooltip title='Open menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt='User avatar' src='' className='cusor-pointer' />
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
+            <CustomMenu
               id='menu-appbar'
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -172,12 +181,35 @@ export default function DashboardLayout({ children }: Props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <Box className='h-[200px] w-[200px]'>
-                <Box>
-                  <Typography>{currentUser?.name}</Typography>
+              <Box className='h-[100px] w-[250px]'>
+                <Box className='flex py-[5px] mx-[10px]'>
+                  <Avatar
+                    alt='User avatar'
+                    src=''
+                    className='cusor-pointer h-[35px] w-[35px]'
+                  />
+                  <Box className='flex flex-col mx-[10px] px-[15px]'>
+                    <Typography sx={{ fontWeight: "600", fontSize: "13px" }}>
+                      {currentUser?.name}
+                    </Typography>
+                    <Typography sx={{ fontWeight: "400", fontSize: "13px" }}>
+                      {currentUser?.email}
+                    </Typography>
+                  </Box>
                 </Box>
+                <Divider />
+                <MenuItem className='flex items-center py-[5px] mx-[10px]'>
+                  <Box className='h-[35px] w-[40px] flex justify-center items-center'>
+                    <Icon.LogOut size={20} className='cusor-pointer' />
+                  </Box>
+                  <Box className='flex flex-col mx-[10px] px-[15px]'>
+                    <Typography sx={{ fontWeight: "600", fontSize: "13px" }}>
+                      Logout
+                    </Typography>
+                  </Box>
+                </MenuItem>
               </Box>
-            </Menu>
+            </CustomMenu>
           </Box>
         </Toolbar>
       </AppBar>
@@ -186,7 +218,6 @@ export default function DashboardLayout({ children }: Props) {
         sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
         aria-label='mailbox folders'
       >
-        {/* Drawer for mobile */}
         <Drawer
           variant='temporary'
           open={mobileOpen}
@@ -204,7 +235,6 @@ export default function DashboardLayout({ children }: Props) {
         >
           {drawer}
         </Drawer>
-        {/* Permanent drawer for desktop */}
         <Drawer
           variant='permanent'
           sx={{
