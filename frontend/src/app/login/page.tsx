@@ -5,7 +5,7 @@ import { LoginForm } from "./LoginForm";
 import { useAppDispatch } from "../redux/reduxHooks";
 import { useRouter } from "next/navigation";
 import { LoginFormData } from "./LoginFormData";
-import { login } from "../redux/slice/authSlice";
+import { fetchCurrentUser, login } from "../redux/slice/authSlice";
 
 const PageContainer = styled("div")(({ theme }) => ({
   display: "grid",
@@ -50,6 +50,8 @@ const LoginPage = () => {
       const result = await dispatch(login(formData)).unwrap();
       // result will be the payload from the fulfilled action
       localStorage.setItem("token", result.accessToken);
+      //Fetch current user after login
+      await dispatch(fetchCurrentUser()).unwrap();
       router.push("/dashboard");
     } catch (err) {
       console.log(err);

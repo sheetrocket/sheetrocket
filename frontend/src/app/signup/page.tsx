@@ -3,7 +3,7 @@ import React from "react";
 import { Box, styled, Typography } from "@mui/material";
 import { SignupForm } from "./SignupForm";
 import { useAppDispatch } from "../redux/reduxHooks";
-import { signup } from "../redux/slice/authSlice";
+import { fetchCurrentUser, signup } from "../redux/slice/authSlice";
 import { UserData } from "../services/authService";
 import { useRouter } from "next/navigation";
 
@@ -49,6 +49,8 @@ const SignupPage = () => {
       const result = await dispatch(signup(formData)).unwrap();
       // result will be the payload from the fulfilled action
       localStorage.setItem("token", result.accessToken);
+      //Fetch current user after signup
+      await dispatch(fetchCurrentUser()).unwrap();
       router.push("/dashboard");
     } catch (err) {
       console.log(err);
