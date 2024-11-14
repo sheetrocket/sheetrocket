@@ -2,17 +2,20 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { styled, Typography } from "@mui/material";
-
-import TextInput from "../common/components/TextInput";
-import { FormHeaderTitle } from "../common/components/FormHeaderTitle";
-import { AuthButton } from "../common/components/AuthButton";
-import Link from "next/link";
-import { LoginFormData } from "./LoginFormData";
+import { SignupFormData } from "./SignupFormData";
 import validationSchema from "./validationSchema";
-import { useAppDispatch, useAppSelector } from "../redux/reduxHooks";
-import { selectError, selectIsLoading } from "../redux/selectors/auth_selector";
-import { CustomAlert } from "../common/components/CustomAlert";
-import { clearError } from "../redux/slice/authSlice";
+import TextInput from "../../common/components/TextInput";
+import { FormHeaderTitle } from "../../common/components/FormHeaderTitle";
+import { AuthButton } from "../../common/components/AuthButton";
+
+import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks";
+import {
+  selectError,
+  selectIsLoading,
+} from "../../redux/selectors/auth_selector";
+import { CustomAlert } from "../../common/components/CustomAlert";
+import { clearError } from "../../redux/slice/authSlice";
 
 const StyledForm = styled("form")(({ theme }) => ({
   width: "100%",
@@ -20,41 +23,59 @@ const StyledForm = styled("form")(({ theme }) => ({
 }));
 
 type Props = {
-  onSubmit: (formData: LoginFormData) => void;
+  onSubmit: (formData: SignupFormData) => void;
 };
 
-export const LoginForm = ({ onSubmit }: Props) => {
+export const SignupForm = ({ onSubmit }: Props) => {
   let errorMessage = useAppSelector(selectError);
   const isLoading = useAppSelector(selectIsLoading);
   const dispatch = useAppDispatch();
 
-  const formik = useFormik<LoginFormData>({
+  const formik = useFormik<SignupFormData>({
     initialValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      onSubmit(values);
+      const { confirmPassword, ...dataToSend } = values;
+      onSubmit(dataToSend);
     },
   });
 
   useEffect(() => {
     // Focus the first input field on render
-    const nameInput = document.getElementById("email");
+    const nameInput = document.getElementById("name");
+
     if (nameInput) {
       nameInput.focus();
     }
-    //clear error message when the component mounts
     dispatch(clearError());
   }, [dispatch]);
 
   return (
     <StyledForm onSubmit={formik.handleSubmit}>
-      <FormHeaderTitle title='Sign in' />
+      <FormHeaderTitle title='Sign up' />
       {errorMessage && (
         <CustomAlert message={errorMessage} visible={!!errorMessage} />
       )}
+
+      <TextInput
+        id='name'
+        label='Name'
+        placeholder='Your name'
+        name='name'
+        htmlFor='name'
+        type='text'
+        value={formik.values.name}
+        onChange={formik.handleChange}
+        error={formik.touched.name && Boolean(formik.errors.name)}
+        helperText={
+          formik.touched.name ? (formik.errors.name as string) : undefined
+        }
+      />
       <TextInput
         id='email'
         label='Email'
@@ -85,16 +106,33 @@ export const LoginForm = ({ onSubmit }: Props) => {
             : undefined
         }
       />
-
-      <AuthButton label='Sign In' loading={isLoading} />
-
+      <TextInput
+        id='confirmPassword'
+        label='Confirm Password'
+        placeholder='Confirm password'
+        name='confirmPassword'
+        type='password'
+        htmlFor='password'
+        value={formik.values.confirmPassword}
+        onChange={formik.handleChange}
+        error={
+          formik.touched.confirmPassword &&
+          Boolean(formik.errors.confirmPassword)
+        }
+        helperText={
+          formik.touched.confirmPassword
+            ? (formik.errors.confirmPassword as string)
+            : undefined
+        }
+      />
+      <AuthButton label='Sign Up' loading={isLoading} />
       <Typography sx={{ textAlign: "center", marginTop: "20px" }}>
-        Not having an account?{" "}
+        Already have an account?{" "}
         <Link
-          href='/signup'
+          href='/auth/login'
           style={{ color: "teal", textDecoration: "underline" }}
         >
-          Sign up
+          Sign in
         </Link>
       </Typography>
       <Typography

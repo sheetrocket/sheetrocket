@@ -1,17 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
-import DashboardLayout from "./_components/DashboardLayout";
-import { fetchCurrentUser } from "@/app/redux/slice/authSlice";
-import { useAppDispatch, useAppSelector } from "@/app/redux/reduxHooks";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../redux/reduxHooks";
+import { fetchCurrentUser, logout } from "../redux/slice/authSlice";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+interface Props {
+  children: React.ReactNode;
+}
+
+const AuthLayout = ({ children }: Props) => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const router = useRouter();
 
   const [loading, setLoading] = useState<boolean>(true);
-
   useEffect(() => {
     const checkAuthStatus = async () => {
       const token = localStorage.getItem("token"); // Get the token from localStorage
@@ -21,33 +23,40 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           // Dispatch fetchCurrentUser to validate token and get user data
           await dispatch(fetchCurrentUser()).unwrap();
 
-          if (!isAuthenticated) {
-            // If user is not authenticated, redirect to the landing
-            router.push("/");
+          if (isAuthenticated) {
+            // If user is authenticated, redirect to the dashboard
+            router.replace("/dashboard");
             setLoading(false);
           } else {
             setLoading(false);
-            router.push("/dashboard");
           }
         } catch (error) {
           console.error("Failed to fetch current user:", error);
-          router.push("/");
+          setLoading(false);
+        } finally {
           setLoading(false);
         }
       } else {
-        router.push("/");
+        setLoading(false);
       }
     };
+
     checkAuthStatus();
   }, [dispatch, isAuthenticated, router]);
 
-  return (
-    <>
-      {loading ? (
-        <div>loading...</div>
-      ) : (
-        <DashboardLayout>{children}</DashboardLayout>
-      )}
-    </>
-  );
-}
+  if (loading) {
+    return <div>Loading....</div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <>
+        <main>{children}</main>
+      </>
+    );
+  }
+
+  return null;
+};
+
+export default AuthLayout;

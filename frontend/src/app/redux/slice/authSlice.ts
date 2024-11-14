@@ -1,4 +1,4 @@
-import { LoginFormData } from "@/app/login/LoginFormData";
+import { LoginFormData } from "@/app/auth/login/LoginFormData";
 import {
   AuthErrorResponse,
   authService,

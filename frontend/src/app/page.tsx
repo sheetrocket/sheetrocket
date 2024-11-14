@@ -1,12 +1,6 @@
 "use client";
 import { Box, Button, Container, Typography, styled } from "@mui/material";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { fetchCurrentUser } from "./redux/slice/authSlice";
-import { useAppDispatch, useAppSelector } from "./redux/reduxHooks";
-import { RootState } from "./redux/store";
 
 // Styled components
 const Section = styled(Box)({
@@ -91,54 +85,6 @@ const StarButton = styled(Button)<{ component: React.ElementType }>(
 );
 
 const Page = () => {
-  const dispatch = useAppDispatch();
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-  const router = useRouter();
-
-  useEffect(() => {
-    /***
-   We're keeping this function (logic) here temporarily. 
-   It retrieves the token from localStorage and sends it to 
-   the "/current-user" endpoint to verify the token and fetch the current user. 
-   Once the request is completed successfully (handled in authSlice.ts), 
-   the isAuthenticated state in authSlice.ts is updated to true.
-   In this logic, if the user is authenticated, 
-   they will be redirected to the 
-   dashboard (the dashboard will be implemented in another branch). 
-   For now, we're leaving this as is because we might 
-   add a launcher page 
-   or a blank page to display while the request is pending or loading, 
-   before showing either the landing page or dashboard.
-  Alternatively, 
-  we may set the landing page as the default component, 
-  adding this logic to a button in the navigation header. 
-  The button could display either:
-   <button>Sign in</button> or <button>Dashboard</button> (depending on auth state). 
-  While the request is pending, neither button will be visible until the request is 
-  completed successfully.
-  ****/
-    const checkAuthStatus = async () => {
-      const token = localStorage.getItem("token"); // Get the token from localStorage
-
-      if (token) {
-        try {
-          // Dispatch fetchCurrentUser to validate token and get user data
-          await dispatch(fetchCurrentUser()).unwrap();
-
-          if (isAuthenticated) {
-            // If authenticated, redirect to the dashboard
-            router.push("/dashboard");
-          }
-        } catch (error) {
-          console.error("Failed to fetch current user:", error);
-          router.push("/");
-        }
-      }
-    };
-    checkAuthStatus();
-  }, [dispatch, isAuthenticated, router]);
-
-  // Render landing page by default if not authenticated or fetching user
   return <LandingPage />;
 };
 
@@ -158,7 +104,11 @@ const LandingPage = () => {
           revolutionizing your workflow.
         </BodyTypography>
         <ButtonContainer>
-          <GetStartedButton component={Link} href='/signup' variant='contained'>
+          <GetStartedButton
+            component={Link}
+            href='/auth/signup'
+            variant='contained'
+          >
             Get Started
           </GetStartedButton>
           <StarButton
