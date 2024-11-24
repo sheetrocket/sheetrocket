@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity('spreadsheet')
-export class Spreadsheet {
+export class Googlesheets {
   @PrimaryGeneratedColumn('uuid')
   id: string; // Unique ID for the record
 
@@ -31,6 +31,6 @@ export class Spreadsheet {
   createdAt: Date; // Timestamp of when the entry was created
 
   // Many spreadsheets belong to one user
-  @ManyToOne(() => User, (user) => user.spreadsheet, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.googlesheets, { onDelete: 'CASCADE' })
   user: User;
 }

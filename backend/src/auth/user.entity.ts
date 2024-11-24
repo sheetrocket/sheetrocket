@@ -1,4 +1,4 @@
-import { Spreadsheet } from 'src/spreadsheet/spreadsheet.entity';
+import { Googlesheets } from 'src/googlesheets/googlesheets.entity';
 import {
   Entity,
   Column,
@@ -32,6 +32,6 @@ export class User {
   updatedAt: Date;
 
   // One user can have many spreadsheets
-  @OneToMany(() => Spreadsheet, (spreadsheet) => spreadsheet.user)
-  spreadsheet: Spreadsheet[];
+  @OneToMany(() => Googlesheets, (googlesheet) => googlesheet.user)
+  googlesheets: Googlesheets[];
 }
