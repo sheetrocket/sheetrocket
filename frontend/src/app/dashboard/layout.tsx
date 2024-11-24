@@ -4,6 +4,7 @@ import DashboardLayout from "./_components/DashboardLayout";
 import { fetchCurrentUser } from "@/app/redux/slice/authSlice";
 import { useAppDispatch, useAppSelector } from "@/app/redux/reduxHooks";
 import { useRouter } from "next/navigation";
+import { PageLauncher } from "../common/components/PageLauncher";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
@@ -44,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {loading ? (
-        <div>loading...</div>
+        <PageLauncher />
       ) : (
         <DashboardLayout>{children}</DashboardLayout>
       )}

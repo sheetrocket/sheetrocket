@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/reduxHooks";
 import { fetchCurrentUser, logout } from "../redux/slice/authSlice";
+import { PageLauncher } from "../common/components/PageLauncher";
 
 interface Props {
   children: React.ReactNode;
@@ -45,7 +46,7 @@ const AuthLayout = ({ children }: Props) => {
   }, [dispatch, isAuthenticated, router]);
 
   if (loading) {
-    return <div>Loading....</div>;
+    return <PageLauncher />;
   }
 
   if (!isAuthenticated) {
