@@ -1,9 +1,11 @@
+import { Spreadsheet } from 'src/spreadsheet/spreadsheet.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -28,4 +30,8 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // One user can have many spreadsheets
+  @OneToMany(() => Spreadsheet, (spreadsheet) => spreadsheet.user)
+  spreadsheet: Spreadsheet[];
 }
