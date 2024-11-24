@@ -2,10 +2,10 @@
 import React from "react";
 import { Box, styled, Typography } from "@mui/material";
 import { LoginForm } from "./LoginForm";
-import { useAppDispatch } from "../redux/reduxHooks";
+import { useAppDispatch } from "../../redux/reduxHooks";
 import { useRouter } from "next/navigation";
 import { LoginFormData } from "./LoginFormData";
-import { fetchCurrentUser, login } from "../redux/slice/authSlice";
+import { fetchCurrentUser, login } from "../../redux/slice/authSlice";
 
 const PageContainer = styled("div")(({ theme }) => ({
   display: "grid",

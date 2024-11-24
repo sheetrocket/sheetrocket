@@ -1,4 +1,4 @@
-import { LoginFormData } from "../login/LoginFormData";
+import { LoginFormData } from "../auth/login/LoginFormData";
 import axiosInstance from "./apiConfig";
 import { AUTH_ENDPOINTS } from "./apiConfig";
 

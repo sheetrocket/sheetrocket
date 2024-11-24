@@ -2,9 +2,9 @@
 import React from "react";
 import { Box, styled, Typography } from "@mui/material";
 import { SignupForm } from "./SignupForm";
-import { useAppDispatch } from "../redux/reduxHooks";
-import { fetchCurrentUser, signup } from "../redux/slice/authSlice";
-import { UserData } from "../services/authService";
+import { useAppDispatch } from "../../redux/reduxHooks";
+import { fetchCurrentUser, signup } from "../../redux/slice/authSlice";
+import { UserData } from "../../services/authService";
 import { useRouter } from "next/navigation";
 
 const PageContainer = styled("div")(({ theme }) => ({

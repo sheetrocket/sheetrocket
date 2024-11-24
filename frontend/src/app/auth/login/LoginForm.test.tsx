@@ -1,23 +1,22 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { SignupForm } from "./SignupForm";
+import { LoginForm } from "./LoginForm";
 import { Provider } from "react-redux";
-import store from "../redux/store";
+import store from "../../redux/store";
 
-describe("SignupForm", () => {
+describe("LoginForm", () => {
   test("renders signup form", () => {
     render(
       <Provider store={store}>
-        <SignupForm onSubmit={() => null} />
+        <LoginForm onSubmit={() => null} />
       </Provider>
     );
-    expect(screen.getByLabelText(/Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Confirm Password/i)).toBeInTheDocument();
+
     expect(
-      screen.getByRole("button", { name: /Sign Up/i })
+      screen.getByRole("button", { name: /Sign in/i })
     ).toBeInTheDocument();
   });
 
@@ -25,31 +24,27 @@ describe("SignupForm", () => {
   test("should auto-focus the first input field when the form is rendered", async () => {
     render(
       <Provider store={store}>
-        <SignupForm onSubmit={() => null} />
+        <LoginForm onSubmit={() => null} />
       </Provider>
     );
 
     // assert
-    await waitFor(() => expect(screen.getByLabelText(/Name/i)).toHaveFocus());
+    await waitFor(() => expect(screen.getByLabelText(/Email/i)).toHaveFocus());
   });
 
   test("shows validation errors for empty fields", async () => {
     render(
       <Provider store={store}>
-        <SignupForm onSubmit={() => null} />
+        <LoginForm onSubmit={() => null} />
       </Provider>
     );
 
-    const signUpButton = screen.getByRole("button", { name: /Sign Up/i });
-    userEvent.click(signUpButton);
+    const signInButton = screen.getByRole("button", { name: /Sign In/i });
+    userEvent.click(signInButton);
 
-    expect(await screen.findByText(/Name is required/i)).toBeInTheDocument();
     expect(await screen.findByText(/Email is required/i)).toBeInTheDocument();
     expect(
       await screen.findByText(/Password is required/i)
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByText(/This password field is also required/i)
     ).toBeInTheDocument();
   });
 
@@ -57,7 +52,7 @@ describe("SignupForm", () => {
     const handleSubmit = jest.fn();
     render(
       <Provider store={store}>
-        <SignupForm onSubmit={handleSubmit} />
+        <LoginForm onSubmit={handleSubmit} />
       </Provider>
     );
 
@@ -67,7 +62,7 @@ describe("SignupForm", () => {
     await userEvent.type(emailInput, "invalidemailvvv");
 
     // Click submit button
-    const submitButton = screen.getByRole("button", { name: /Sign Up/i });
+    const submitButton = screen.getByRole("button", { name: /Sign In/i });
     await userEvent.click(submitButton);
 
     // Check for the presence of the error message
@@ -79,63 +74,30 @@ describe("SignupForm", () => {
     });
   });
 
-  // Test for password mismatch
-  it("shows an error if passwords do not match", async () => {
-    render(
-      <Provider store={store}>
-        <SignupForm onSubmit={() => null} />
-      </Provider>
-    );
-
-    // Fill out the form with mismatching passwords
-    const passwordInput = screen.getByLabelText(/Password/i);
-    const confirmPasswordInput = screen.getByLabelText(/Confirm Password/i);
-
-    await userEvent.type(passwordInput, "password123");
-    await userEvent.type(confirmPasswordInput, "differentPassword");
-
-    const submitButton = screen.getByRole("button", { name: /Sign Up/i });
-    await userEvent.click(submitButton);
-
-    // Check for the presence of the password mismatch error message
-    await waitFor(() => {
-      const errorElement = screen.queryByText(/Passwords don't match/i);
-      if (errorElement) {
-        expect(errorElement).toBeInTheDocument();
-      }
-    });
-  });
-
   test("submits form with valid input values", async () => {
     const handleSubmit = jest.fn();
     render(
       <Provider store={store}>
-        <SignupForm onSubmit={handleSubmit} />
+        <LoginForm onSubmit={handleSubmit} />
       </Provider>
     );
 
     // Fill out the form
-    userEvent.type(screen.getByLabelText(/Name/i), "Allen Jones");
     userEvent.type(screen.getByLabelText(/Email/i), "allen@example.com");
     userEvent.type(screen.getByLabelText(/Password/i), "password123");
-    userEvent.type(screen.getByLabelText(/Confirm Password/i), "password123");
 
     // Submit the form
-    userEvent.click(screen.getByRole("button", { name: /Sign Up/i }));
+    userEvent.click(screen.getByRole("button", { name: /Sign In/i }));
     handleSubmit({
-      name: "Allen Jones",
       email: "allen@example.com",
       password: "password123",
-      confirmPassword: "password123",
     });
 
     // Wait for potential asynchronous validation
     await waitFor(() =>
       expect(handleSubmit).toHaveBeenCalledWith({
-        name: "Allen Jones",
         email: "allen@example.com",
         password: "password123",
-        confirmPassword: "password123",
       })
     );
   });
