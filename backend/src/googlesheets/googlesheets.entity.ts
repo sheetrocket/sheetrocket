@@ -7,10 +7,10 @@ import {
   ManyToOne,
 } from 'typeorm';
 
-@Entity('spreadsheet')
+@Entity()
 export class Googlesheets {
   @PrimaryGeneratedColumn('uuid')
-  id: string; // Unique ID for the record
+  id: string;
 
   @Column({ unique: true })
   googleSheetId: string; // Extracted from the user-provided URL
@@ -28,7 +28,7 @@ export class Googlesheets {
   allowedMethods: string[]; // Allowed HTTP methods for the API
 
   @CreateDateColumn()
-  createdAt: Date; // Timestamp of when the entry was created
+  createdAt: Date;
 
   // Many spreadsheets belong to one user
   @ManyToOne(() => User, (user) => user.googlesheets, { onDelete: 'CASCADE' })

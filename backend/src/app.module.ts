@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/user.entity';
+import { Googlesheets } from './googlesheets/googlesheets.entity';
+import { GoogleSheetsModule } from './googlesheets/googlesheets.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -11,11 +13,12 @@ import { User } from './auth/user.entity';
       username: 'my_db_name',
       password: 'my_db_password',
       database: 'postgres',
-      entities: [User],
+      entities: [User, Googlesheets],
       synchronize: false,
       autoLoadEntities: true,
     }),
     AuthModule,
+    GoogleSheetsModule,
   ],
 })
 export class AppModule {}
